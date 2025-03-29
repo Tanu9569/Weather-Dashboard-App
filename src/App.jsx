@@ -1,13 +1,17 @@
 // src/App.jsx
-import './App.css';
-import { Header } from './components/Header';
-import { WeatherCard } from './components/WeatherCard';
+import "./App.css";
+import { Footer } from "./components/Footer";
+import { Header } from "./components/Header";
+import { WeatherCard } from "./components/WeatherCard";
 
 function App() {
   return (
-    <div className="min-h-screen bg-[#121212]">
+    <div className="min-h-screen flex flex-col bg-[#121212]">
       <Header />
-      <WeatherCard />
+      <main className="flex-grow">
+        <WeatherCard />
+      </main>
+      <Footer />
     </div>
   );
 }
