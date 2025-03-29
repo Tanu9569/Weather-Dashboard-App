@@ -1,14 +1,15 @@
-import './App.css'
+// src/App.jsx
+import './App.css';
 import { Header } from './components/Header';
-import { WeatherCard} from './components/WeatherCard';
+import { WeatherCard } from './components/WeatherCard';
 
 function App() {
   return (
-    <div>
+    <div className="min-h-screen bg-[#121212]">
       <Header />
-      <WeatherCard/>
+      <WeatherCard />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
