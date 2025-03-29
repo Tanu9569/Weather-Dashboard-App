@@ -1,21 +1,31 @@
+// WeatherCard.jsx
 import React, { useState } from "react";
-import { fetchWeatherData } from "../services/weatherApi";
+import { fetchWeatherData, fetchWeatherForecast } from "../services/weatherApi";
 
 export const WeatherCard = () => {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
+  const [forecastData, setForecastData] = useState(null);
   const [error, setError] = useState(null);
 
   const handleSearch = async () => {
     if (!city.trim()) return;
     setWeatherData(null);
+    setForecastData(null);
 
     try {
-      const data = await fetchWeatherData(city);
-      setWeatherData(data);
+      // current weather data
+      const currentData = await fetchWeatherData(city);
+      setWeatherData(currentData);
+
+      // forecast using coordinates from current data
+      const forecast = await fetchWeatherForecast(
+        currentData.coord.lat,
+        currentData.coord.lon
+      );
+      setForecastData(forecast);
+
     } catch (err) {
-      console.log(err.message);
-      // setError('City not found');
       if (err.message === "City not found") {
         setError("City not found");
       } else {
@@ -23,6 +33,7 @@ export const WeatherCard = () => {
       }
     }
   };
+
   return (
     <div>
       <div className="flex justify-center flex-col">
@@ -36,23 +47,41 @@ export const WeatherCard = () => {
           Search
         </button>
       </div>
+      
       <div className="flex justify-center flex-col">
-        {weatherData ? (
+        {weatherData && (
           <div>
-            <p>City:{weatherData.name}</p>
+            {/* Current Weather */}
+            <p>City: {weatherData.name}</p>
             <p>Temperature: {weatherData.main.temp}°C</p>
             <p>Weather: {weatherData.weather[0].description}</p>
             <p>Humidity: {weatherData.main.humidity}%</p>
             <p>Wind Speed: {weatherData.wind.speed} meter/sec</p>
-            {/* <span>Weather Icon: {weatherData.weather[0].icon}</span> */}
             <img
               src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
               alt="weather icon"
             />
           </div>
-        ) : (
-          <p>{error}</p>
         )}
+
+        {/* 5-Day Forecast */}
+        {forecastData && (
+          <div>
+            <h3>5-Day Forecast</h3>
+            {forecastData.list.slice(0, 5).map((item, index) => (
+              <div key={index}>
+                <p>Date: {new Date(item.dt * 1000).toLocaleDateString()}</p>
+                <p>Temp: {item.main.temp}°C</p>
+                <img
+                  src={`http://openweathermap.org/img/wn/${item.weather[0].icon}.png`}
+                  alt="forecast icon"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {error && <p>{error}</p>}
       </div>
     </div>
   );
