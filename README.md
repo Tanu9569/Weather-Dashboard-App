@@ -93,6 +93,10 @@ zynetic/
 ├── package.json
 └── README.md
 ```
+### Deployment on Vercel
+
+- **Live Link:** [https://www.3sangeetha3.tech/](https://www.3sangeetha3.tech/)
+- **Vercel Link:** [https://zynetic.vercel.app/](https://zynetic.vercel.app/)
 
 
 <p align="center"> Made with ❤️ by Sangeetha Choudhary </p>
