@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { fetchWeatherData, fetchWeatherForecast } from "../services/weatherApi";
-import { Search, MapPin } from 'lucide-react';
+import { Search, MapPin, Clock } from 'lucide-react';
 import { Button } from "./Button";
 
 export const WeatherCard = () => {
@@ -10,6 +10,26 @@ export const WeatherCard = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [unit, setUnit] = useState("C");
+  const [searchHistory, setSearchHistory] = useState([]);
+  
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('weatherSearchHistory');
+    if (savedHistory) {
+      setSearchHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('weatherSearchHistory', JSON.stringify(searchHistory));
+  }, [searchHistory]);
+
+  const addToSearchHistory = (cityName) => {
+    if (!cityName || searchHistory.includes(cityName)) return;
+
+    const updatedHistory = [cityName, ...searchHistory.filter(item => item !== cityName)].slice(0, 5);
+    setSearchHistory(updatedHistory);
+  };
+
   const handleSearch = async () => {
     if (!city.trim()) return;
     
@@ -22,6 +42,9 @@ export const WeatherCard = () => {
       // current weather data
       const currentData = await fetchWeatherData(city);
       setWeatherData(currentData);
+      
+      // Add to search history
+      addToSearchHistory(currentData.name);
       
       // forecast using coordinates from current data
       const forecast = await fetchWeatherForecast(
@@ -38,6 +61,10 @@ export const WeatherCard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleHistoryClick = (cityName) => {
+    setCity(cityName);
   };
 
   const handleKeyDown = (e) => {
@@ -93,18 +120,41 @@ export const WeatherCard = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="max-w-6xl mx-auto mb-8 bg-[#1E1E1F] rounded-xl p-6 shadow-lg">
-        <div className="flex items-center gap-2 mb-6">
-          <input
-            type="text"
-            placeholder="Enter city name"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-1 py-3 px-4 bg-[#282829] text-[#FAFAFA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFDB70]"
-          />
-          <Button className="h-[48px]" onClick={handleSearch}>
-            <Search />
-          </Button>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="Enter city name"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-1 py-3 px-4 bg-[#282829] text-[#FAFAFA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFDB70]"
+            />
+            <Button className="h-[48px]" onClick={handleSearch}>
+              <Search />
+            </Button>
+          </div>
+          
+          {/* Search History */}
+          {searchHistory.length > 0 && (
+            <div className="pb-2">
+              <div className="flex items-center gap-2 mb-2 text-[#FAFAFA] opacity-70">
+                <Clock size={16} />
+                <span>Recent searches</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {searchHistory.map((historyItem, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleHistoryClick(historyItem)}
+                    className="px-3 py-1 bg-[#282829] hover:bg-[#373738] text-[#FAFAFA] rounded-full text-sm transition-colors"
+                  >
+                    {historyItem}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
         
         {loading && (
@@ -121,7 +171,7 @@ export const WeatherCard = () => {
         )}
         
         {weatherData && (
-          <div className="space-y-8">
+          <div className="space-y-8 mt-6">
             <div className="flex justify-between items-center">
               <div>
                 <div className="flex items-center gap-2">
