@@ -10,19 +10,6 @@
 
 Weather Dashboard is a modern, interactive weather forecasting application built with React and Vite. It provides real-time weather updates, a 5-day forecast, and convenient search history, empowering you to quickly get current weather information for any city.
 
-## Preview 
-
-<p align="center">
-  <img src="https://cdn.jsdelivr.net/gh/3sangeetha3/PicLink@Images-branch/images/1743284981817-476443795.png" alt="Home Page" width="800">
-  <em>Home Page</em>
-</p>
-
-<p align="center">
-  <img src="https://cdn.jsdelivr.net/gh/3sangeetha3/PicLink@Images-branch/images/1743284863914-940012623.png" alt="Home Page Continued" width="800">
-  <em>Error Page </em>
-</p>
-
-
 ## ✨ Key Features
 
 - **Real-Time Weather Data:** Search for any city to get the current temperature, humidity, wind speed, and weather conditions.
