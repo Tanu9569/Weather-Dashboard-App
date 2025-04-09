@@ -41,8 +41,7 @@ Weather Dashboard is a modern, interactive weather forecasting application built
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/3Sangeetha3/Zynetic.git
-cd zynetic
+git clone https://github.com/Tanu9569/Weather-Dashboard-App.git
 ```
 2. **Install dependencies**
 ```bash
@@ -86,4 +85,4 @@ zynetic/
 - **Vercel Link:** [https://zynetic.vercel.app/](https://zynetic.vercel.app/)
 
 
-<p align="center"> Made with ❤️ by Sangeetha Choudhary </p>
+
